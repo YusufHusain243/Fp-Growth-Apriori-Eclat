@@ -7,6 +7,7 @@ class AprioriController extends AprioriModel
     public function index()
     {
         $minSupport = $_POST['min_support'];
+        $minConfidence = $_POST['min_confidence'];
 
         $apriori = new Apriori();
 
@@ -31,8 +32,8 @@ class AprioriController extends AprioriModel
         $dataItemOne = $apriori->itemSetOne($dataProduk, $dataTransaksi, $minSupport);
         $dataItemTwo = $apriori->itemSetTwo($dataItemOne, $dataTransaksi, $minSupport);
         $dataItemThree = $apriori->itemSetThree($dataItemOne, $dataTransaksi, $minSupport);
-        $ruleTwoItem = $apriori->ruleTwoItem($dataItemOne, $dataItemTwo, count($dataTransaksi));
-        $ruleThreeItem = $apriori->ruleThreeItem($dataItemOne, $dataItemTwo, $dataItemThree, count($dataTransaksi));
+        $ruleTwoItem = $apriori->ruleTwoItem($dataItemOne, $dataItemTwo, count($dataTransaksi), $minConfidence);
+        $ruleThreeItem = $apriori->ruleThreeItem($dataItemOne, $dataItemTwo, $dataItemThree, count($dataTransaksi), $minConfidence);
         return [
             'produk' => $dataProduk,
             'transaksi' => $dataTransaksi,
@@ -49,8 +50,6 @@ class AprioriController extends AprioriModel
         $dataProduk = [];
         foreach ($data as $key => $value) {
             $item = explode(' ', $value['item']);
-            // print_r($item);
-            // die;
             for ($i = 0; $i < count($item); $i++) {
                 if (!in_array($item[$i], $dataProduk)) {
                     $dataProduk[] = $item[$i];

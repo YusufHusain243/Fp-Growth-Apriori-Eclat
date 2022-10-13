@@ -1,6 +1,8 @@
 <form action="" method="post">
     <label for="">Min Support</label>
     <input type="text" name="min_support">
+    <label for="">Min Confidence</label>
+    <input type="text" name="min_confidence">
     <button type="submit" name="submit">Submit</button>
 </form>
 

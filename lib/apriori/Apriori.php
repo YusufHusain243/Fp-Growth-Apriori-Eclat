@@ -1,6 +1,7 @@
 <?php
 
-class Apriori{
+class Apriori
+{
     public function itemSetOne($dataProduk, $dataTransaction, $minSupport)
     {
         $dataItemOne = [];
@@ -85,7 +86,7 @@ class Apriori{
         return $dataItemThree;
     }
 
-    public function ruleTwoItem($dataItemOne, $dataItemTwo, $total_transaction)
+    public function ruleTwoItem($dataItemOne, $dataItemTwo, $total_transaction, $min_confidence)
     {
         $ruleTwoItem = [];
         foreach ($dataItemTwo as $value) {
@@ -125,14 +126,24 @@ class Apriori{
             $temp_data['consequent'] = $temp[1];
             $temp_data['ab'] = $value['count_transaction'];
             $temp_data['a'] = $temp_count1;
-            $temp_data['confidence'] = $value['count_transaction'] / $temp_count1;
+
+            $confidence = $value['count_transaction'] / $temp_count1;
+            if ($confidence <= $min_confidence) {
+                $temp_data['confidence'] = $confidence;
+            }
+
             $temp_data['lift_ratio'] = ($value['count_transaction'] / $temp_count1) / ($cons_freq1 / $total_transaction);
 
             $temp_data2['antecedent'] = $temp[1];
             $temp_data2['consequent'] = $temp[0];
             $temp_data2['ab'] = $value['count_transaction'];
             $temp_data2['a'] = $temp_count2;
-            $temp_data2['confidence'] = $value['count_transaction'] / $temp_count2;
+
+            $confidence = $value['count_transaction'] / $temp_count2;
+            if ($confidence <= $min_confidence) {
+                $temp_data['confidence'] = $confidence;
+            }
+
             $temp_data2['lift_ratio'] = ($value['count_transaction'] / $temp_count2) / ($cons_freq2 / $total_transaction);
 
             $ruleTwoItem[] = [$temp_data, $temp_data2];
@@ -140,7 +151,7 @@ class Apriori{
         return $ruleTwoItem;
     }
 
-    public function ruleThreeItem($dataItemOne, $dataItemTwo, $dataItemThree, $total_transaction)
+    public function ruleThreeItem($dataItemOne, $dataItemTwo, $dataItemThree, $total_transaction, $min_confidence)
     {
         $ruleThreeItem = [];
         foreach ($dataItemThree as $value) {
@@ -232,42 +243,72 @@ class Apriori{
             $temp_data1['consequent'] = $temp_produk3;
             $temp_data1['ab'] = $value['count_transaction'];
             $temp_data1['a'] = $temp_count1;
-            $temp_data1['confidence'] = $value['count_transaction'] / $temp_count1;
+
+            $confidence = $value['count_transaction'] / $temp_count1;
+            if ($confidence <= $min_confidence) {
+                $temp_data1['confidence'] = $confidence;
+            }
+
             $temp_data1['lift_ratio'] = ($value['count_transaction'] / $temp_count1) / ($const_freq1 / $total_transaction);
 
             $temp_data2['antecedent'] = $temp[1];
             $temp_data2['consequent'] = $temp_produk2;
             $temp_data2['ab'] = $value['count_transaction'];
             $temp_data2['a'] = $temp_count2;
-            $temp_data2['confidence'] = $value['count_transaction'] / $temp_count2;
+
+            $confidence = $value['count_transaction'] / $temp_count2;
+            if ($confidence <= $min_confidence) {
+                $temp_data2['confidence'] = $confidence;
+            }
+
             $temp_data2['lift_ratio'] = ($value['count_transaction'] / $temp_count2) / ($const_freq2 / $total_transaction);
 
             $temp_data3['antecedent'] = $temp[2];
             $temp_data3['consequent'] = $temp_produk1;
             $temp_data3['ab'] = $value['count_transaction'];
             $temp_data3['a'] = $temp_count3;
-            $temp_data3['confidence'] = $value['count_transaction'] / $temp_count3;
+
+            $confidence = $value['count_transaction'] / $temp_count3;
+            if ($confidence <= $min_confidence) {
+                $temp_data3['confidence'] = $confidence;
+            }
+
             $temp_data3['lift_ratio'] = ($value['count_transaction'] / $temp_count3) / ($const_freq3 / $total_transaction);
 
             $temp_data4['antecedent'] = $temp_produk1;
             $temp_data4['consequent'] = $temp[2];
             $temp_data4['ab'] = $value['count_transaction'];
             $temp_data4['a'] = $temp_count4;
-            $temp_data4['confidence'] = $value['count_transaction'] / $temp_count4;
+
+            $confidence = $value['count_transaction'] / $temp_count4;
+            if ($confidence <= $min_confidence) {
+                $temp_data4['confidence'] = $confidence;
+            }
+
             $temp_data4['lift_ratio'] = ($value['count_transaction'] / $temp_count4) / ($const_freq4 / $total_transaction);
 
             $temp_data5['antecedent'] = $temp_produk2;
             $temp_data5['consequent'] = $temp[1];
             $temp_data5['ab'] = $value['count_transaction'];
             $temp_data5['a'] = $temp_count5;
-            $temp_data5['confidence'] = $value['count_transaction'] / $temp_count5;
+
+            $confidence = $value['count_transaction'] / $temp_count5;
+            if ($confidence <= $min_confidence) {
+                $temp_data5['confidence'] = $confidence;
+            }
+
             $temp_data5['lift_ratio'] = ($value['count_transaction'] / $temp_count5) / ($const_freq5 / $total_transaction);
 
             $temp_data6['antecedent'] = $temp_produk3;
             $temp_data6['consequent'] = $temp[0];
             $temp_data6['ab'] = $value['count_transaction'];
             $temp_data6['a'] = $temp_count6;
-            $temp_data6['confidence'] = $value['count_transaction'] / $temp_count6;
+
+            $confidence = $value['count_transaction'] / $temp_count6;
+            if ($confidence <= $min_confidence) {
+                $temp_data6['confidence'] = $confidence;
+            }
+
             $temp_data6['lift_ratio'] = ($value['count_transaction'] / $temp_count6) / ($const_freq6 / $total_transaction);
 
             $ruleThreeItem[] = [
