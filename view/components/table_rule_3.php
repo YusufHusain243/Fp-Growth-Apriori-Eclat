@@ -14,7 +14,6 @@
         <?php
         $i = 1;
         foreach ($data['ruleThreeItem'] as $key => $item) {
-            // foreach ($item as $key => $value) {
         ?>
             <tr>
                 <td><?= $i; ?></td>
@@ -26,7 +25,6 @@
             </tr>
         <?php
             $i++;
-            // }
         }
         ?>
     </tbody>
