@@ -14,19 +14,19 @@
         <?php
         $i = 1;
         foreach ($data['ruleThreeItem'] as $key => $item) {
-            foreach ($item as $key => $value) {
+            // foreach ($item as $key => $value) {
         ?>
-                <tr>
-                    <td><?= $i; ?></td>
-                    <td>Jika Membeli {<?= $value['antecedent'] ?>}, Maka Membeli {<?= $value['consequent'] ?>}</td>
-                    <td><?= $value['ab'] ?></td>
-                    <td><?= $value['a'] ?></td>
-                    <td><?= $value['confidence'] ?></td>
-                    <td><?= $value['lift_ratio'] ?></td>
-                </tr>
+            <tr>
+                <td><?= $i; ?></td>
+                <td>Jika Membeli {<?= $item['antecedent'] ?>}, Maka Membeli {<?= $item['consequent'] ?>}</td>
+                <td><?= $item['ab'] ?></td>
+                <td><?= $item['a'] ?></td>
+                <td><?= $item['confidence'] ?></td>
+                <td><?= $item['lift_ratio'] ?></td>
+            </tr>
         <?php
-            }
             $i++;
+            // }
         }
         ?>
     </tbody>

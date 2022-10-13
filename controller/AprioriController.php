@@ -10,24 +10,7 @@ class AprioriController extends AprioriModel
         $minConfidence = $_POST['min_confidence'];
 
         $apriori = new Apriori();
-
-        $dataTransaksi = [];
-        if (($open = fopen("dataset sakuyan2.csv", "r")) !== FALSE) {
-
-            while (($data = fgetcsv($open, 1000, ",")) !== FALSE) {
-                $temp['item'] = implode($data);
-                $dataTransaksi[] = $temp;
-            }
-
-            fclose($open);
-        }
-
-        // $dataTransaksi = $this->getTransaction();
-        // echo "<pre>";
-        // var_dump($dataTransaksi);
-        // echo "</pre>";
-        // die;
-
+        $dataTransaksi = $this->getTransaction();
         $dataProduk = $this->splitItemTransaction($dataTransaksi);
         $dataItemOne = $apriori->itemSetOne($dataProduk, $dataTransaksi, $minSupport);
         $dataItemTwo = $apriori->itemSetTwo($dataItemOne, $dataTransaksi, $minSupport);
@@ -49,7 +32,7 @@ class AprioriController extends AprioriModel
     {
         $dataProduk = [];
         foreach ($data as $key => $value) {
-            $item = explode(' ', $value['item']);
+            $item = explode(', ', $value['item']);
             for ($i = 0; $i < count($item); $i++) {
                 if (!in_array($item[$i], $dataProduk)) {
                     $dataProduk[] = $item[$i];

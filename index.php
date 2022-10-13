@@ -16,7 +16,7 @@ $page = $_GET['page'];
 
 <body>
     <div class="container">
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <nav class="navbar navbar-expand navbar-dark bg-primary">
             <div class="container-fluid">
                 <div class="collapse navbar-collapse" id="navbarText">
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
