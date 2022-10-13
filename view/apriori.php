@@ -11,7 +11,7 @@ $aprioriController = new AprioriController();
 
 if (isset($_POST['submit'])) {
     $data = $aprioriController->index();
-    // include "components/table_produk.php";
+    include "components/table_produk.php";
     include "components/table_transaksi.php";
     include "components/table_iterasi_1.php";
     include "components/table_iterasi_2.php";
