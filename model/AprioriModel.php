@@ -1,5 +1,5 @@
 <?php
-require "../Connection.php";
+require "Connection.php";
 
 class AprioriModel extends Connection
 {
