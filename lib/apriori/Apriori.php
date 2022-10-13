@@ -122,29 +122,28 @@ class Apriori
                 }
             }
 
-            $temp_data['antecedent'] = $temp[0];
-            $temp_data['consequent'] = $temp[1];
-            $temp_data['ab'] = $value['count_transaction'];
-            $temp_data['a'] = $temp_count1;
-
-            $confidence = $value['count_transaction'] / $temp_count1;
-            if ($confidence <= $min_confidence) {
-                $temp_data['confidence'] = $confidence;
+            $confidence1 = $value['count_transaction'] / $temp_count1;
+            if ($confidence1 <= $min_confidence) {
+                $temp_data['antecedent'] = $temp[0];
+                $temp_data['consequent'] = $temp[1];
+                $temp_data['ab'] = $value['count_transaction'];
+                $temp_data['a'] = $temp_count1;
+                $temp_data['confidence'] = $confidence1;
+                $temp_data['lift_ratio'] = ($value['count_transaction'] / $temp_count1) / ($cons_freq1 / $total_transaction);
             }
 
-            $temp_data['lift_ratio'] = ($value['count_transaction'] / $temp_count1) / ($cons_freq1 / $total_transaction);
 
-            $temp_data2['antecedent'] = $temp[1];
-            $temp_data2['consequent'] = $temp[0];
-            $temp_data2['ab'] = $value['count_transaction'];
-            $temp_data2['a'] = $temp_count2;
 
-            $confidence = $value['count_transaction'] / $temp_count2;
-            if ($confidence <= $min_confidence) {
-                $temp_data['confidence'] = $confidence;
+            $confidence2 = $value['count_transaction'] / $temp_count2;
+            if ($confidence2 <= $min_confidence) {
+                $temp_data2['antecedent'] = $temp[1];
+                $temp_data2['consequent'] = $temp[0];
+                $temp_data2['ab'] = $value['count_transaction'];
+                $temp_data2['a'] = $temp_count2;
+                $temp_data2['confidence'] = $confidence2;
+                $temp_data2['lift_ratio'] = ($value['count_transaction'] / $temp_count2) / ($cons_freq2 / $total_transaction);
             }
 
-            $temp_data2['lift_ratio'] = ($value['count_transaction'] / $temp_count2) / ($cons_freq2 / $total_transaction);
 
             $ruleTwoItem[] = [$temp_data, $temp_data2];
         }
@@ -244,9 +243,9 @@ class Apriori
             $temp_data1['ab'] = $value['count_transaction'];
             $temp_data1['a'] = $temp_count1;
 
-            $confidence = $value['count_transaction'] / $temp_count1;
-            if ($confidence <= $min_confidence) {
-                $temp_data1['confidence'] = $confidence;
+            $confidence1 = $value['count_transaction'] / $temp_count1;
+            if ($confidence1 <= $min_confidence) {
+                $temp_data1['confidence'] = $confidence1;
             }
 
             $temp_data1['lift_ratio'] = ($value['count_transaction'] / $temp_count1) / ($const_freq1 / $total_transaction);
@@ -256,9 +255,9 @@ class Apriori
             $temp_data2['ab'] = $value['count_transaction'];
             $temp_data2['a'] = $temp_count2;
 
-            $confidence = $value['count_transaction'] / $temp_count2;
-            if ($confidence <= $min_confidence) {
-                $temp_data2['confidence'] = $confidence;
+            $confidence2 = $value['count_transaction'] / $temp_count2;
+            if ($confidence2 <= $min_confidence) {
+                $temp_data2['confidence'] = $confidence2;
             }
 
             $temp_data2['lift_ratio'] = ($value['count_transaction'] / $temp_count2) / ($const_freq2 / $total_transaction);
@@ -268,9 +267,9 @@ class Apriori
             $temp_data3['ab'] = $value['count_transaction'];
             $temp_data3['a'] = $temp_count3;
 
-            $confidence = $value['count_transaction'] / $temp_count3;
-            if ($confidence <= $min_confidence) {
-                $temp_data3['confidence'] = $confidence;
+            $confidence3 = $value['count_transaction'] / $temp_count3;
+            if ($confidence3 <= $min_confidence) {
+                $temp_data3['confidence'] = $confidence3;
             }
 
             $temp_data3['lift_ratio'] = ($value['count_transaction'] / $temp_count3) / ($const_freq3 / $total_transaction);
@@ -280,9 +279,9 @@ class Apriori
             $temp_data4['ab'] = $value['count_transaction'];
             $temp_data4['a'] = $temp_count4;
 
-            $confidence = $value['count_transaction'] / $temp_count4;
-            if ($confidence <= $min_confidence) {
-                $temp_data4['confidence'] = $confidence;
+            $confidence4 = $value['count_transaction'] / $temp_count4;
+            if ($confidence4 <= $min_confidence) {
+                $temp_data4['confidence'] = $confidence4;
             }
 
             $temp_data4['lift_ratio'] = ($value['count_transaction'] / $temp_count4) / ($const_freq4 / $total_transaction);
@@ -292,9 +291,9 @@ class Apriori
             $temp_data5['ab'] = $value['count_transaction'];
             $temp_data5['a'] = $temp_count5;
 
-            $confidence = $value['count_transaction'] / $temp_count5;
-            if ($confidence <= $min_confidence) {
-                $temp_data5['confidence'] = $confidence;
+            $confidence5 = $value['count_transaction'] / $temp_count5;
+            if ($confidence5 <= $min_confidence) {
+                $temp_data5['confidence'] = $confidence5;
             }
 
             $temp_data5['lift_ratio'] = ($value['count_transaction'] / $temp_count5) / ($const_freq5 / $total_transaction);
@@ -304,9 +303,9 @@ class Apriori
             $temp_data6['ab'] = $value['count_transaction'];
             $temp_data6['a'] = $temp_count6;
 
-            $confidence = $value['count_transaction'] / $temp_count6;
-            if ($confidence <= $min_confidence) {
-                $temp_data6['confidence'] = $confidence;
+            $confidence6 = $value['count_transaction'] / $temp_count6;
+            if ($confidence6 <= $min_confidence) {
+                $temp_data6['confidence'] = $confidence6;
             }
 
             $temp_data6['lift_ratio'] = ($value['count_transaction'] / $temp_count6) / ($const_freq6 / $total_transaction);

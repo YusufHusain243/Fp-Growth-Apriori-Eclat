@@ -19,6 +19,6 @@ if (isset($_POST['submit'])) {
     include "components/table_iterasi_2.php";
     include "components/table_iterasi_3.php";
     include "components/table_rule_2.php";
-    include "components/table_rule_3.php";
+    // include "components/table_rule_3.php";
 }
 ?>
