@@ -1,3 +1,4 @@
+<h1>Apriori Algorithm</h1>
 <form action="" method="post">
     <label for="">Min Support</label>
     <input type="text" name="min_support">

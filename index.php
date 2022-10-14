@@ -1,5 +1,5 @@
 <?php
-error_reporting(0);
+// error_reporting(0);
 $page = $_GET['page'];
 ?>
 
@@ -33,7 +33,10 @@ $page = $_GET['page'];
 
         <?php
         if ($page == 'apriori') {
-            include 'view/apriori.php';
+            include 'view/apriori/AprioriView.php';
+        }
+        if ($page == 'fp-growth') {
+            include 'view/fpgrowth/FpGrowthView.php';
         }
         ?>
     </div>
