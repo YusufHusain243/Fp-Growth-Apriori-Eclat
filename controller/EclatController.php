@@ -1,8 +1,8 @@
 <?php
-require "lib\apriori\Apriori.php";
-require "model\AprioriModel.php";
+require "lib\Eclat\Eclat.php";
+require "model\EclatModel.php";
 
-class AprioriController extends AprioriModel
+class EclatController extends EclatModel
 {
     public function index()
     {
@@ -11,23 +11,25 @@ class AprioriController extends AprioriModel
         $minSupport = $_POST['min_support'];
         $minConfidence = $_POST['min_confidence'];
 
-        $apriori = new Apriori();
+        $eclat = new Eclat();
+
         $dataTransaksi = $this->getTransaction();
         $dataProduk = $this->splitItemTransaction($dataTransaksi);
-        $dataItemOne = $apriori->itemSetOne($dataProduk, $dataTransaksi, $minSupport);
-        $dataItemTwo = $apriori->itemSetTwo($dataItemOne, $dataTransaksi, $minSupport);
-        $dataItemThree = $apriori->itemSetThree($dataItemOne, $dataTransaksi, $minSupport);
-        $ruleTwoItem = $apriori->ruleTwoItem($dataItemOne, $dataItemTwo, count($dataTransaksi), $minConfidence);
-        $ruleThreeItem = $apriori->ruleThreeItem($dataItemOne, $dataItemTwo, $dataItemThree, count($dataTransaksi), $minConfidence);
-
+        $vertikalDataFormat = $eclat->vertikalDataFormat($dataProduk, $dataTransaksi);
+        $itemsetOne = $eclat->itemsetOne($vertikalDataFormat, count($dataTransaksi), $minSupport);
+        $itemsetTwo = $eclat->itemsetTwo($itemsetOne, count($dataTransaksi), $minSupport);
+        $itemsetThree = $eclat->itemsetThree($itemsetOne, count($dataTransaksi), $minSupport);
+        $ruleTwoItem = $eclat->ruleTwoItem($itemsetOne, $itemsetTwo, count($dataTransaksi), $minConfidence);
+        $ruleThreeItem = $eclat->ruleThreeItem($itemsetOne, $itemsetTwo, $itemsetThree, count($dataTransaksi), $minConfidence);
         $akhir = microtime(true);
         $lama = $akhir - $awal;
         return [
             'produk' => $dataProduk,
             'transaksi' => $dataTransaksi,
-            'dataItemOne' => $dataItemOne,
-            'dataItemTwo' => $dataItemTwo,
-            'dataItemThree' => $dataItemThree,
+            'vertikalDataFormat' => $vertikalDataFormat,
+            'itemsetOne' => $itemsetOne,
+            'itemsetTwo' => $itemsetTwo,
+            'itemsetThree' => $itemsetThree,
             'ruleTwoItem' => $ruleTwoItem,
             'ruleThreeItem' => $ruleThreeItem,
             'lama' => $lama,

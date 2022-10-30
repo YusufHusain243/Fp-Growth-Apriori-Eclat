@@ -1,4 +1,4 @@
-<h1>Apriori Algorithm</h1>
+<h1>Eclat Algorithm</h1>
 <form action="" method="post">
     <label for="">Min Support</label>
     <input type="text" name="min_support">
@@ -8,17 +8,17 @@
 </form>
 
 <?php
-require "controller\AprioriController.php";
+require "controller\EclatController.php";
 
-$aprioriController = new AprioriController();
+$eclatController = new EclatController();
 
 if (isset($_POST['submit'])) {
-    $data = $aprioriController->index();
-    include "components/table_produk.php";
-    include "components/table_transaksi.php";
-    include "components/table_iterasi_1.php";
-    include "components/table_iterasi_2.php";
-    include "components/table_iterasi_3.php";
+    $data = $eclatController->index();
+    include "components/table_transaction.php";
+    include "components/table_vertikalDataFormat.php";
+    include "components/table_itemsetOne.php";
+    include "components/table_itemsetTwo.php";
+    include "components/table_itemsetThree.php";
     include "components/table_rule_2.php";
     include "components/table_rule_3.php";
     echo "Lama Eksekusi = " . $data['lama'] . "detik";

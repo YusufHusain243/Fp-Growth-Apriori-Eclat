@@ -1,5 +1,5 @@
 <?php
-// error_reporting(0);
+error_reporting(0);
 $page = $_GET['page'];
 ?>
 
@@ -26,6 +26,9 @@ $page = $_GET['page'];
                         <li class="nav-item">
                             <a class="nav-link <?= $page === 'fp-growth' ? 'active' : '' ?>" aria-current="page" href="index.php?page=fp-growth">Fp Growth</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link <?= $page === 'eclat' ? 'active' : '' ?>" aria-current="page" href="index.php?page=eclat">Eclat</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -37,6 +40,9 @@ $page = $_GET['page'];
         }
         if ($page == 'fp-growth') {
             include 'view/fpgrowth/FpGrowthView.php';
+        }
+        if ($page == 'eclat') {
+            include 'view/eclat/EclatView.php';
         }
         ?>
     </div>
