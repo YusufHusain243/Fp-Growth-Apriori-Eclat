@@ -1,0 +1,18 @@
+{
+    "name": "yusuf/coba",
+    "description": "hanya untuk belajar",
+    "type": "project",
+    "license": "GPL",
+    "authors": [{
+        "name": "YusufHusain243",
+        "email": "husainyusuf382@gmail.com"
+    }],
+    "require": {
+        "php": ">=7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Renaldy\\PhpFPGrowth\\": "lib/Fp-Growth/"
+        }
+    }
+}

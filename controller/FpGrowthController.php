@@ -1,40 +1,55 @@
 <?php
-require "lib\Fp-growth\FpGrowth.php";
+
+use Renaldy\PhpFPGrowth\FPGrowth;
+
+require "vendor\autoload.php";
 require "model\FpGrowthModel.php";
 
 class FpGrowthController extends FpGrowthModel
 {
     public function index()
     {
+        $awal =  microtime(true);
+
         $minSupport = $_POST['min_support'];
         $minConfidence = $_POST['min_confidence'];
+        $getTransaction = $this->getTransaction();
+        $transactions = $this->formatDataTransactions($getTransaction);
 
-        $fpGrowth = new FpGrowth();
-        $dataTransaksi = $this->getTransaction();
-        $dataProduk = $this->splitItemTransaction($dataTransaksi);
-        $freqItemSet = $fpGrowth->freqItemSet($dataProduk, $dataTransaksi, $minSupport);
-        $sortByPriority = $fpGrowth->sortByPriority($freqItemSet);
-        $sortItemByPriority = $fpGrowth->sortItemByPriority($dataTransaksi, $sortByPriority);
+        $fpgrowth = new FPGrowth($transactions, $minSupport, $minConfidence);
+        $fpgrowth->run();
+
+        $freqItemSet = $fpgrowth->getFrequentItemSet();
+        $orderItemSet = $fpgrowth->getOrderedItemSet();
+        $fpTree = $fpgrowth->getTree();
+        $patterns = $fpgrowth->getPatterns();
+        $rules = $fpgrowth->getRules();
+
+        $akhir = microtime(true);
+        $lama = $akhir - $awal;
+
         return [
-            'produk' => $dataProduk,
-            'transaksi' => $dataTransaksi,
+            'transaksi' => $getTransaction,
             'freqItemSet' => $freqItemSet,
-            'sortByPriority' => $sortByPriority,
-            'sortItemByPriority' => $sortItemByPriority,
+            'orderItemSet' => $orderItemSet,
+            'fpTree' => $fpTree,
+            'patterns' => $patterns,
+            'rules' => $rules,
+            'lama' => $lama,
         ];
     }
 
-    private function splitItemTransaction($data)
+    private function formatDataTransactions($getTransactions)
     {
-        $dataProduk = [];
-        foreach ($data as $key => $value) {
+        $transactions = [];
+        foreach ($getTransactions as $value) {
+            $temp = [];
             $item = explode(', ', $value['item']);
-            for ($i = 0; $i < count($item); $i++) {
-                if (!in_array($item[$i], $dataProduk)) {
-                    $dataProduk[] = $item[$i];
-                }
+            foreach ($item as $value2) {
+                $temp[] = $value2;
             }
+            $transactions[] = $temp;
         }
-        return $dataProduk;
+        return $transactions;
     }
 }

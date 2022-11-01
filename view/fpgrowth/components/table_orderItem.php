@@ -1,22 +1,23 @@
-<h1>Sort Item Transaction By Priority</h1>
+<h1>OrderedItemSet</h1>
 <table class="table table-bordered">
     <thead>
         <tr>
             <th>No</th>
-            <th>Nama Produk</th>
+            <th>Daftar Transaksi</th>
         </tr>
     </thead>
     <tbody>
         <?php
         $i = 1;
-        foreach ($data['sortItemByPriority'] as $item) {
+        foreach ($data['orderItemSet'] as $item) {
+
         ?>
             <tr>
                 <td><?= $i; ?></td>
                 <td>
                     <?php
-                    for ($j = 0; $j < count($item); $j++) {
-                        echo $item[$j]['item'] . ", ";
+                    foreach ($item as $value) {
+                        echo $value . ", ";
                     }
                     ?>
                 </td>
