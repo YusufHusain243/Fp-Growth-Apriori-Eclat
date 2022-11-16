@@ -4,6 +4,7 @@ use Renaldy\PhpFPGrowth\FPGrowth;
 
 require "vendor\autoload.php";
 require "model\FpGrowthModel.php";
+require "lib\Fp-Growth\FpGrowth2.php";
 
 class FpGrowthController extends FpGrowthModel
 {
@@ -11,32 +12,37 @@ class FpGrowthController extends FpGrowthModel
     {
         $awal =  microtime(true);
 
-        $minSupport = $_POST['min_support'];
-        $minConfidence = $_POST['min_confidence'];
-        $getTransaction = $this->getTransaction();
-        $transactions = $this->formatDataTransactions($getTransaction);
+        $fp_growth = new FpGrowth2();
+        $tree = $fp_growth->tree();
+        print_r($tree);
 
-        $fpgrowth = new FPGrowth($transactions, $minSupport, $minConfidence);
-        $fpgrowth->run();
 
-        $freqItemSet = $fpgrowth->getFrequentItemSet();
-        $orderItemSet = $fpgrowth->getOrderedItemSet();
-        $fpTree = $fpgrowth->getTree();
-        $patterns = $fpgrowth->getPatterns();
-        $rules = $fpgrowth->getRules();
+        // $minSupport = $_POST['min_support'];
+        // $minConfidence = $_POST['min_confidence'];
+        // $getTransaction = $this->getTransaction();
+        // $transactions = $this->formatDataTransactions($getTransaction);
 
-        $akhir = microtime(true);
-        $lama = $akhir - $awal;
+        // $fpgrowth = new FPGrowth($transactions, $minSupport, $minConfidence);
+        // $fpgrowth->run();
 
-        return [
-            'transaksi' => $getTransaction,
-            'freqItemSet' => $freqItemSet,
-            'orderItemSet' => $orderItemSet,
-            'fpTree' => $fpTree,
-            'patterns' => $patterns,
-            'rules' => $rules,
-            'lama' => $lama,
-        ];
+        // $freqItemSet = $fpgrowth->getFrequentItemSet();
+        // $orderItemSet = $fpgrowth->getOrderedItemSet();
+        // $fpTree = $fpgrowth->getTree();
+        // $patterns = $fpgrowth->getPatterns();
+        // $rules = $fpgrowth->getRules();
+
+        // $akhir = microtime(true);
+        // $lama = $akhir - $awal;
+
+        // return [
+        //     'transaksi' => $getTransaction,
+        //     'freqItemSet' => $freqItemSet,
+        //     'orderItemSet' => $orderItemSet,
+        //     'fpTree' => $fpTree,
+        //     'patterns' => $patterns,
+        //     'rules' => $rules,
+        //     'lama' => $lama,
+        // ];
     }
 
     private function formatDataTransactions($getTransactions)
