@@ -16,11 +16,8 @@ if (isset($_POST['submit'])) {
     $data = $aprioriController->index();
     include "components/table_produk.php";
     include "components/table_transaksi.php";
-    include "components/table_iterasi_1.php";
-    include "components/table_iterasi_2.php";
-    include "components/table_iterasi_3.php";
-    include "components/table_rule_2.php";
-    include "components/table_rule_3.php";
+    include "components/table_itemsets.php";
+    include "components/table_rules.php";
     echo "Lama Eksekusi = " . $data['lama'] . "detik";
 }
 ?>

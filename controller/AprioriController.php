@@ -11,25 +11,18 @@ class AprioriController extends AprioriModel
         $minSupport = $_POST['min_support'];
         $minConfidence = $_POST['min_confidence'];
 
-        $apriori = new Apriori();
+        $apriori = new AprioriAlgorithm();
         $dataTransaksi = $this->getTransaction();
         $dataProduk = $this->splitItemTransaction($dataTransaksi);
-        $dataItemOne = $apriori->itemSetOne($dataProduk, $dataTransaksi, $minSupport);
-        $dataItemTwo = $apriori->itemSetTwo($dataItemOne, $dataTransaksi, $minSupport);
-        $dataItemThree = $apriori->itemSetThree($dataItemOne, $dataTransaksi, $minSupport);
-        $ruleTwoItem = $apriori->ruleTwoItem($dataItemOne, $dataItemTwo, count($dataTransaksi), $minConfidence);
-        $ruleThreeItem = $apriori->ruleThreeItem($dataItemOne, $dataItemTwo, $dataItemThree, count($dataTransaksi), $minConfidence);
-
+        $dataItemsets = $apriori->apriori($dataProduk, $dataTransaksi, $minSupport);
+        $dataRules = $apriori->generateRule($dataItemsets, $dataTransaksi, $minConfidence);
         $akhir = microtime(true);
         $lama = $akhir - $awal;
         return [
             'produk' => $dataProduk,
             'transaksi' => $dataTransaksi,
-            'dataItemOne' => $dataItemOne,
-            'dataItemTwo' => $dataItemTwo,
-            'dataItemThree' => $dataItemThree,
-            'ruleTwoItem' => $ruleTwoItem,
-            'ruleThreeItem' => $ruleThreeItem,
+            'dataItemsets' => $dataItemsets,
+            'dataRules' => $dataRules,
             'lama' => $lama,
         ];
     }

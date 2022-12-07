@@ -1,326 +1,250 @@
 <?php
 
-class Apriori
+class AprioriAlgorithm
 {
-    public function itemSetOne($dataProduk, $dataTransaction, $minSupport)
+    public function apriori($arr_produk, $arr_transactions, $min_support)
     {
-        $dataItemOne = [];
-        foreach ($dataProduk as $produk) {
-            $count_transaction = 0;
-            $support = 0;
-            foreach ($dataTransaction as $transaksi) {
-                if (strpos($transaksi['item'], $produk) !== false) {
-                    $count_transaction += 1;
+        $L = -1;
+        $result = null;
+        $check = false;
+        while ($check == false) {
+            if ($result == null) {
+                $arr = $this->combine($arr_produk, $arr_transactions, $min_support, null, null);
+                if ($arr != null) {
+                    $result[] = $arr;
                 }
-            }
-            $support = (($count_transaction / count($dataTransaction)));
-            if ($support >= $minSupport) {
-                $dataItemOne[] = [
-                    "produk" => $produk,
-                    "count_transaction" => $count_transaction,
-                    "support" => $support,
-                ];
-            }
-        }
-        return $dataItemOne;
-    }
-
-    public function itemSetTwo($dataItemOne, $dataTransaction, $minSupport)
-    {
-        $dataItemTwo = [];
-        for ($i = 0; $i < count($dataItemOne) - 1; $i++) {
-            for ($j = $i + 1; $j < count($dataItemOne); $j++) {
-                $produk = $dataItemOne[$i]['produk'] . ', ' . $dataItemOne[$j]['produk'];
-                $count_transaction = 0;
-                $support = 0;
-                foreach ($dataTransaction as $transaksi) {
-                    if (
-                        strpos($transaksi['item'], $dataItemOne[$i]['produk']) !== false &&
-                        strpos($transaksi['item'], $dataItemOne[$j]['produk']) !== false
-                    ) {
-                        $count_transaction += 1;
+            } else {
+                for ($j = 0; $j < count($result[$L]) - 1; $j++) {
+                    $temp = explode(", ", $result[$L][$j]['product']);
+                    $p = end($temp);
+                    $index = array_search($p, $arr_produk);
+                    $arr = $this->combine($arr_produk, $arr_transactions, $min_support, $result[$L][$j]['product'], $index);
+                    if ($arr != null) {
+                        $result[] = $arr;
                     }
                 }
-                $support = (($count_transaction / count($dataTransaction)));
-                if ($support >= $minSupport) {
-                    $dataItemTwo[] = [
-                        "produk" => $produk,
-                        "count_transaction" => $count_transaction,
-                        "support" => $support,
-                    ];
-                }
             }
+            $L++;
+            $check = !isset($result[$L]);
         }
-        return $dataItemTwo;
+        $result = $this->mergeArray($result);
+        return $result;
     }
 
-    public function itemSetThree($dataItemOne, $dataTransaction, $minSupport)
+    private function combine($arr_produk, $arr_transactions, $min_support, $produk, $index)
     {
-        $dataItemThree = [];
-        for ($i = 0; $i < count($dataItemOne) - 1; $i++) {
-            for ($j = $i + 1; $j < count($dataItemOne); $j++) {
-                for ($k = $j + 1; $k < count($dataItemOne); $k++) {
-                    $produk = $dataItemOne[$i]['produk'] . ', ' . $dataItemOne[$j]['produk'] . ', ' . $dataItemOne[$k]['produk'];
-                    $count_transaction = 0;
-                    $support = 0;
-                    foreach ($dataTransaction as $transaksi) {
-                        if (
-                            strpos($transaksi['item'], $dataItemOne[$i]['produk']) !== false &&
-                            strpos($transaksi['item'], $dataItemOne[$j]['produk']) !== false &&
-                            strpos($transaksi['item'], $dataItemOne[$k]['produk']) !== false
-                        ) {
-                            $count_transaction += 1;
+        $result = null;
+        $temp = $produk;
+        if ($produk == null && $index == null) {
+            for ($i = 0; $i < count($arr_produk); $i++) {
+                $freq = $this->freq($arr_transactions, $arr_produk[$i]);
+                $support = ($freq / count($arr_transactions));
+                $t = null;
+                $t["product"] = $arr_produk[$i];
+                $t["freq"] = $freq;
+                $t["support"] = $support;
+                if ($support >= $min_support) {
+                    $result[] = $t;
+                }
+            }
+        } else {
+            for ($j = $index + 1; $j < count($arr_produk); $j++) {
+
+                $cut_string = explode(", ", $arr_produk[$j]);
+                $p = end($cut_string);
+                $produk .= ", " . $p;
+
+                $freq = $freq = $this->freq($arr_transactions, $produk);
+                $support = ($freq / count($arr_transactions));
+                $t = null;
+                $t['product'] = $produk;
+                $t["freq"] = $freq;
+                $t['support'] = $support;
+                if ($support >= $min_support) {
+                    $result[] = $t;
+                }
+                $produk = $temp;
+            }
+        }
+        return $result;
+    }
+
+    private function mergeArray($array)
+    {
+        $arraysMerged = [];
+        if (is_array($array)) {
+            foreach ($array as $a) {
+                $arraysMerged = array_merge($arraysMerged, $a);
+            }
+        }
+        return $arraysMerged;
+    }
+
+    private function freq($arr_transactions, $arr_produk)
+    {
+        $freq = 0;
+        foreach ($arr_transactions as $transaction) {
+            $arr = explode(", ", $arr_produk);
+            $check = 0;
+            for ($k = 0; $k < count($arr); $k++) {
+                if (strpos($transaction['item'], $arr[$k]) !== false) {
+                    $check += 0;
+                } else {
+                    $check += 1;
+                }
+            }
+
+            if ($check == 0) {
+                $freq += 1;
+            }
+        }
+        return $freq;
+    }
+
+    public function generateRule($itemsets, $arr_transactions, $min_confidence)
+    {
+        $result = null;
+        for ($i = 0; $i < count($itemsets); $i++) {
+            $arr_produk = explode(", ", $itemsets[$i]['product']);
+            if (count($arr_produk) == 2) {
+                $t = null;
+                for ($j = 0; $j < count($arr_produk); $j++) {
+                    $confidence = $this->confidence($arr_produk[$j], implode($this->consequent($arr_produk, $arr_produk[$j])), $arr_transactions);
+                    $t = null;
+                    $t['antecedent'] = $arr_produk[$j];
+                    $t['consequent'] = implode($this->consequent($arr_produk, $arr_produk[$j]));
+                    $t['confidence'] = $confidence;
+                    $t['lift_ratio'] = $this->lift_ratio($confidence, implode($this->consequent($arr_produk, $arr_produk[$j])), $arr_transactions);
+                    if ($confidence >= $min_confidence) {
+                        $result[] = [$t];
+                    }
+                }
+            }
+            if (count($arr_produk) > 2) {
+                $result[] = $this->antecedent($arr_produk, $arr_transactions, $min_confidence);
+            }
+        }
+        $result = $this->mergeArray($result);
+        return $result;
+    }
+
+    private function consequent($arr_produk, $antecedent)
+    {
+        $result = null;
+        for ($i = 0; $i < count($arr_produk); $i++) {
+            $arr_antecedent = explode(", ", $antecedent);
+            $check = 0;
+            for ($j = 0; $j < count($arr_antecedent); $j++) {
+                if ($arr_produk[$i] != $arr_antecedent[$j]) {
+                    $check += 0;
+                } else {
+                    $check += 1;
+                }
+            }
+            if ($check == 0) {
+                $result[] = $arr_produk[$i];
+            }
+        }
+        return $result;
+    }
+
+    private function antecedent($arr_produk, $arr_transactions, $min_confidence)
+    {
+        $L = -1;
+        $temp_result = null;
+        $result = null;
+        $check = false;
+        while ($check == false) {
+            if ($temp_result == null) {
+                $arr = $this->combineAntecedent($arr_produk, null, null, $arr_transactions, $min_confidence);
+                if ($arr != null) {
+                    $temp_result[] = $arr;
+                    if ($this->checkConfidence($arr, $min_confidence) != null) {
+                        $result[] = $this->checkConfidence($arr, $min_confidence);
+                    }
+                }
+            } else {
+                for ($j = 0; $j < count($temp_result[$L]) - 1; $j++) {
+                    $temp = explode(", ", $temp_result[$L][$j]['antecedent']);
+                    $p = end($temp);
+                    $index = array_search($p, $arr_produk);
+                    $arr = $this->combineAntecedent($arr_produk, $temp_result[$L][$j]['antecedent'], $index, $arr_transactions, $min_confidence);
+                    if ($arr != null) {
+                        $temp_result[] = $arr;
+                        if ($this->checkConfidence($arr, $min_confidence) != null) {
+                            $result[] = $this->checkConfidence($arr, $min_confidence);
                         }
                     }
-                    $support = (($count_transaction / count($dataTransaction)));
-                    if ($support >= $minSupport) {
-                        $dataItemThree[] = [
-                            "produk" => $produk,
-                            "count_transaction" => $count_transaction,
-                            "support" => $support,
-                        ];
-                    }
                 }
             }
+            $L++;
+            $check = !isset($temp_result[$L]);
         }
-        return $dataItemThree;
+        $result = $this->mergeArray($result);
+        return $result;
     }
 
-    public function ruleTwoItem($dataItemOne, $dataItemTwo, $total_transaction, $minConfidence)
+    private function checkConfidence($arr_confidence, $min_confidence)
     {
-        $ruleTwoItem = [];
-        foreach ($dataItemTwo as $value) {
-            $temp = explode(', ', $value['produk']);
-
-            $ant_count1 = 0;
-            $ant_count2 = 0;
-
-            $cons_freq1 = 0;
-            $cons_freq2 = 0;
-
-            //get antecedent freq
-            for ($x = 0; $x < count($dataItemOne); $x++) {
-                switch ($dataItemOne[$x]['produk']) {
-                    case $temp[0]:
-                        $ant_count1 = $dataItemOne[$x]['count_transaction'];
-                        break;
-                    case $temp[1]:
-                        $ant_count2 = $dataItemOne[$x]['count_transaction'];
-                        break;
-                }
-            }
-
-            //get consequent freq
-            for ($y = 0; $y < count($dataItemOne); $y++) {
-                switch ($dataItemOne[$y]['produk']) {
-                    case $temp[1]:
-                        $cons_freq1 = $dataItemOne[$y]['count_transaction'];
-                        break;
-                    case $temp[0]:
-                        $cons_freq2 = $dataItemOne[$y]['count_transaction'];
-                        break;
-                }
-            }
-
-            $confidence1 = $value['count_transaction'] / $ant_count1;
-            if ($confidence1 >= $minConfidence) {
-                $temp_data1['antecedent'] = $temp[0];
-                $temp_data1['consequent'] = $temp[1];
-                $temp_data1['ab'] = $value['count_transaction'];
-                $temp_data1['a'] = $ant_count1;
-                $temp_data1['confidence'] =  $confidence1;
-                $temp_data1['lift_ratio'] = ($confidence1) / ($cons_freq1 / $total_transaction);
-            }
-
-            $confidence2 = $value['count_transaction'] / $ant_count2;
-            if ($confidence2 >= $minConfidence) {
-                $temp_data2['antecedent'] = $temp[1];
-                $temp_data2['consequent'] = $temp[0];
-                $temp_data2['ab'] = $value['count_transaction'];
-                $temp_data2['a'] = $ant_count2;
-                $temp_data2['confidence'] = $confidence2;
-                $temp_data2['lift_ratio'] = ($confidence2) / ($cons_freq2 / $total_transaction);
-            }
-
-            if (!in_array($temp_data1, $ruleTwoItem) && isset($temp_data1) == true) {
-                $ruleTwoItem[] = $temp_data1;
-            }
-            if (!in_array($temp_data2, $ruleTwoItem) && isset($temp_data2) == true) {
-                $ruleTwoItem[] = $temp_data2;
+        $result = null;
+        for ($i = 0; $i < count($arr_confidence); $i++) {
+            if ($arr_confidence[$i]['confidence'] >= $min_confidence) {
+                $result[] = $arr_confidence[$i];
             }
         }
-        return $ruleTwoItem;
+        return $result;
     }
 
-    public function ruleThreeItem($dataItemOne, $dataItemTwo, $dataItemThree, $total_transaction, $minConfidence)
+    private function combineAntecedent($arr_produk, $produk, $index, $arr_transactions, $min_confidence)
     {
-        $ruleThreeItem = [];
-        foreach ($dataItemThree as $value) {
-            $temp = explode(', ', $value['produk']);
+        $result = null;
+        $temp = $produk;
+        if ($produk == null && $index == null) {
+            for ($i = 0; $i < count($arr_produk); $i++) {
+                $confidence = $this->confidence($arr_produk[$i], implode(", ", $this->consequent($arr_produk, $arr_produk[$i])), $arr_transactions);
 
-            $ant_count1 = 0;
-            $ant_count2 = 0;
-            $ant_count3 = 0;
-            $ant_count4 = 0;
-            $ant_count5 = 0;
-            $ant_count6 = 0;
-
-            $const_freq1 = 0;
-            $const_freq2 = 0;
-            $const_freq3 = 0;
-            $const_freq4 = 0;
-            $const_freq5 = 0;
-            $const_freq6 = 0;
-
-            $temp_produk1 = $temp[0] . ", " . $temp[1];
-            $temp_produk2 = $temp[0] . ", " . $temp[2];
-            $temp_produk3 = $temp[1] . ", " . $temp[2];
-
-            //1 item antecedent start
-            // - get antecedent freq
-            for ($x = 0; $x < count($dataItemOne); $x++) {
-                switch ($dataItemOne[$x]['produk']) {
-                    case $temp[0]:
-                        $ant_count1 = $dataItemOne[$x]['count_transaction'];
-                        break;
-                    case $temp[1]:
-                        $ant_count2 = $dataItemOne[$x]['count_transaction'];
-                        break;
-                    case $temp[2]:
-                        $ant_count3 = $dataItemOne[$x]['count_transaction'];
-                        break;
+                $t = null;
+                $t['antecedent'] = $arr_produk[$i];
+                $t['consequent'] = implode(", ", $this->consequent($arr_produk, $arr_produk[$i]));
+                $t['confidence'] = $confidence;
+                $t['lift_ratio'] = $this->lift_ratio($confidence, implode(", ", $this->consequent($arr_produk, $arr_produk[$i])), $arr_transactions);
+                $result[] = $t;
+            }
+        } else {
+            if (count(explode(", ", $produk)) < count($arr_produk) - 1) {
+                for ($j = $index + 1; $j < count($arr_produk); $j++) {
+                    $produk .= ", " . $arr_produk[$j];
+                    $confidence = $this->confidence($produk, implode(", ", $this->consequent($arr_produk, $produk)), $arr_transactions);
+                    $t = null;
+                    $t['antecedent'] = $produk;
+                    $t['consequent'] = implode(", ", $this->consequent($arr_produk, $produk));
+                    $t['confidence'] = $confidence;
+                    $t['lift_ratio'] = $this->lift_ratio($confidence, implode(", ", $this->consequent($arr_produk, $produk)), $arr_transactions);
+                    $result[] = $t;
+                    $produk = $temp;
                 }
-            }
-            // - get consequent freq
-            for ($i = 0; $i < count($dataItemTwo); $i++) {
-                switch ($dataItemTwo[$i]['produk']) {
-                    case $temp_produk3:
-                        $const_freq1 = $dataItemTwo[$i]['count_transaction'];
-                        break;
-                    case $temp_produk2:
-                        $const_freq2 = $dataItemTwo[$i]['count_transaction'];
-                        break;
-                    case $temp_produk1:
-                        $const_freq3 = $dataItemTwo[$i]['count_transaction'];
-                        break;
-                }
-            }
-            //1 item antecedent end
-
-            //======================================================//
-
-            //2 item antecedent start
-            // - get antecedent freq
-            for ($y = 0; $y < count($dataItemTwo); $y++) {
-                switch ($dataItemTwo[$y]['produk']) {
-                    case $temp_produk1:
-                        $ant_count4 = $dataItemTwo[$y]['count_transaction'];
-                        break;
-                    case $temp_produk2:
-                        $ant_count5 = $dataItemTwo[$y]['count_transaction'];
-                        break;
-                    case $temp_produk3:
-                        $ant_count6 = $dataItemTwo[$y]['count_transaction'];
-                        break;
-                }
-            }
-            // - get consequent freq
-            for ($j = 0; $j < count($dataItemOne); $j++) {
-                switch ($dataItemOne[$j]['produk']) {
-                    case $temp[2]:
-                        $const_freq4 = $dataItemOne[$j]['count_transaction'];
-                        break;
-                    case $temp[1]:
-                        $const_freq5 = $dataItemOne[$j]['count_transaction'];
-                        break;
-                    case $temp[0]:
-                        $const_freq6 = $dataItemOne[$j]['count_transaction'];
-                        break;
-                }
-            }
-            //2 item antecedent end
-
-
-            $confidence1 = $value['count_transaction'] / $ant_count1;
-            if ($confidence1 >= $minConfidence) {
-                $temp_data1['antecedent'] = $temp[0];
-                $temp_data1['consequent'] = $temp_produk3;
-                $temp_data1['ab'] = $value['count_transaction'];
-                $temp_data1['a'] = $ant_count1;
-                $temp_data1['confidence'] = $confidence1;
-                $temp_data1['lift_ratio'] = ($confidence1) / ($const_freq1 / $total_transaction);
-            }
-
-            $confidence2 = $value['count_transaction'] / $ant_count2;
-            if ($confidence2 >= $minConfidence) {
-                $temp_data2['antecedent'] = $temp[1];
-                $temp_data2['consequent'] = $temp_produk2;
-                $temp_data2['ab'] = $value['count_transaction'];
-                $temp_data2['a'] = $ant_count2;
-                $temp_data2['confidence'] =  $confidence2;
-                $temp_data2['lift_ratio'] = ($confidence2) / ($const_freq2 / $total_transaction);
-            }
-
-            $confidence3 = $value['count_transaction'] / $ant_count3;
-            if ($confidence3 >= $minConfidence) {
-                $temp_data3['antecedent'] = $temp[2];
-                $temp_data3['consequent'] = $temp_produk1;
-                $temp_data3['ab'] = $value['count_transaction'];
-                $temp_data3['a'] = $ant_count3;
-                $temp_data3['confidence'] =  $confidence3;
-                $temp_data3['lift_ratio'] = ($confidence3) / ($const_freq3 / $total_transaction);
-            }
-
-            $confidence4 = $value['count_transaction'] / $ant_count4;
-            if ($confidence4 >= $minConfidence) {
-                $temp_data4['antecedent'] = $temp_produk1;
-                $temp_data4['consequent'] = $temp[2];
-                $temp_data4['ab'] = $value['count_transaction'];
-                $temp_data4['a'] = $ant_count4;
-                $temp_data4['confidence'] =  $confidence4;
-                $temp_data4['lift_ratio'] = ($confidence4) / ($const_freq4 / $total_transaction);
-            }
-
-            $confidence5 = $value['count_transaction'] / $ant_count5;
-            if ($confidence5 >= $minConfidence) {
-                $temp_data5['antecedent'] = $temp_produk2;
-                $temp_data5['consequent'] = $temp[1];
-                $temp_data5['ab'] = $value['count_transaction'];
-                $temp_data5['a'] = $ant_count5;
-                $temp_data5['confidence'] = $confidence5;
-                $temp_data5['lift_ratio'] = ($confidence5) / ($const_freq5 / $total_transaction);
-            }
-
-            $confidence6 = $value['count_transaction'] / $ant_count6;
-            if ($confidence6 >= $minConfidence) {
-                $temp_data6['antecedent'] = $temp_produk3;
-                $temp_data6['consequent'] = $temp[0];
-                $temp_data6['ab'] = $value['count_transaction'];
-                $temp_data6['a'] = $ant_count6;
-                $temp_data6['confidence'] = $confidence6;
-                $temp_data6['lift_ratio'] = ($confidence6) / ($const_freq6 / $total_transaction);
-            }
-
-
-            if (!in_array($temp_data1, $ruleThreeItem) && isset($temp_data1) == true) {
-                $ruleThreeItem[] = $temp_data1;
-            }
-            if (!in_array($temp_data2, $ruleThreeItem) && isset($temp_data2) == true) {
-                $ruleThreeItem[] = $temp_data2;
-            }
-            if (!in_array($temp_data3, $ruleThreeItem) && isset($temp_data3) == true) {
-                $ruleThreeItem[] = $temp_data3;
-            }
-            if (!in_array($temp_data4, $ruleThreeItem) && isset($temp_data4) == true) {
-                $ruleThreeItem[] = $temp_data4;
-            }
-            if (!in_array($temp_data5, $ruleThreeItem) && isset($temp_data5) == true) {
-                $ruleThreeItem[] = $temp_data5;
-            }
-            if (!in_array($temp_data6, $ruleThreeItem) && isset($temp_data6) == true) {
-                $ruleThreeItem[] = $temp_data6;
             }
         }
-        return $ruleThreeItem;
+        return $result;
+    }
+
+    private function confidence($antecedent, $consequent, $itemsets)
+    {
+        $freq_ab = $this->freq($itemsets, $antecedent . ", " . $consequent);
+        $freq_a =  $this->freq($itemsets, $antecedent);
+        $result = $freq_ab / $freq_a;
+        return $result;
+    }
+
+    private function lift_ratio($confidence, $consequent, $arr_transactions)
+    {
+        $result = $confidence / $this->benchmark_confidence($consequent, $arr_transactions);
+        return $result;
+    }
+
+    private function benchmark_confidence($consequent, $arr_transactions)
+    {
+        $result = $this->freq($arr_transactions, $consequent) / count($arr_transactions);
+        return $result;
     }
 }

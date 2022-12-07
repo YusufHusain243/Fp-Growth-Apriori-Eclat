@@ -12,37 +12,32 @@ class FpGrowthController extends FpGrowthModel
     {
         $awal =  microtime(true);
 
-        $fp_growth = new FpGrowth2();
-        $tree = $fp_growth->tree();
-        print_r($tree);
+        $minSupport = $_POST['min_support'];
+        $minConfidence = $_POST['min_confidence'];
+        $getTransaction = $this->getTransaction();
+        $transactions = $this->formatDataTransactions($getTransaction);
 
+        $fpgrowth = new FPGrowth($transactions, $minSupport, $minConfidence);
+        $fpgrowth->run();
 
-        // $minSupport = $_POST['min_support'];
-        // $minConfidence = $_POST['min_confidence'];
-        // $getTransaction = $this->getTransaction();
-        // $transactions = $this->formatDataTransactions($getTransaction);
+        $freqItemSet = $fpgrowth->getFrequentItemSet();
+        $orderItemSet = $fpgrowth->getOrderedItemSet();
+        $fpTree = $fpgrowth->getTree();
+        $patterns = $fpgrowth->getPatterns();
+        $rules = $fpgrowth->getRules();
 
-        // $fpgrowth = new FPGrowth($transactions, $minSupport, $minConfidence);
-        // $fpgrowth->run();
+        $akhir = microtime(true);
+        $lama = $akhir - $awal;
 
-        // $freqItemSet = $fpgrowth->getFrequentItemSet();
-        // $orderItemSet = $fpgrowth->getOrderedItemSet();
-        // $fpTree = $fpgrowth->getTree();
-        // $patterns = $fpgrowth->getPatterns();
-        // $rules = $fpgrowth->getRules();
-
-        // $akhir = microtime(true);
-        // $lama = $akhir - $awal;
-
-        // return [
-        //     'transaksi' => $getTransaction,
-        //     'freqItemSet' => $freqItemSet,
-        //     'orderItemSet' => $orderItemSet,
-        //     'fpTree' => $fpTree,
-        //     'patterns' => $patterns,
-        //     'rules' => $rules,
-        //     'lama' => $lama,
-        // ];
+        return [
+            'transaksi' => $getTransaction,
+            'freqItemSet' => $freqItemSet,
+            'orderItemSet' => $orderItemSet,
+            'fpTree' => $fpTree,
+            'patterns' => $patterns,
+            'rules' => $rules,
+            'lama' => $lama,
+        ];
     }
 
     private function formatDataTransactions($getTransactions)

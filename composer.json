@@ -8,7 +8,9 @@
         "email": "husainyusuf382@gmail.com"
     }],
     "require": {
-        "php": ">=7.0"
+        "php": ">=7.0",
+        "phpoffice/phpspreadsheet": "^1.25",
+        "php-ai/php-ml": "^0.9.0"
     },
     "autoload": {
         "psr-4": {
