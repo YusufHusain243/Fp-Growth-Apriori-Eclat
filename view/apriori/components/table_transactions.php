@@ -1,19 +1,19 @@
-<h1>Produk</h1>
+<h1 class="text-white">Transaksi</h1>
 <table class="table table-bordered">
-    <thead>
+    <thead class="text-white">
         <tr>
             <th>No</th>
-            <th>Nama Produk</th>
+            <th>Daftar Transaksi</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody class="text-white">
         <?php
         $i = 1;
-        foreach ($data['produk'] as $key => $item) {
+        foreach ($data['transactions_data'] as $key => $item) {
         ?>
             <tr>
                 <td><?= $i; ?></td>
-                <td><?= $item ?></td>
+                <td><?= $item['item'] ?></td>
             </tr>
         <?php
             $i++;

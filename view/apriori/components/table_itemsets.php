@@ -1,6 +1,6 @@
-<h1>Itemsets</h1>
+<h1 class="text-white">Itemsets</h1>
 <table class="table table-bordered">
-    <thead>
+    <thead class="text-white"> 
         <tr>
             <th>No</th>
             <th>Item</th>
@@ -8,10 +8,10 @@
             <th>Support</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody class="text-white">
         <?php
         $i = 1;
-        foreach ($data['dataItemsets'] as $key => $item) {
+        foreach ($data['itemsets_data'] as $key => $item) {
         ?>
             <tr>
                 <td><?= $i; ?></td>

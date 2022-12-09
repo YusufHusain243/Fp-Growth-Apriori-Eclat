@@ -1,6 +1,6 @@
-<h1>Rules</h1>
+<h1 class="text-white">Rules</h1>
 <table class="table table-bordered">
-    <thead>
+    <thead class="text-white">
         <tr>
             <th>No</th>
             <th>Antecedent</th>
@@ -9,10 +9,10 @@
             <th>Lift Ratio</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody class="text-white">
         <?php
         $i = 1;
-        foreach ($data['dataRules'] as $key => $item) {
+        foreach ($data['rules_data'] as $key => $item) {
         ?>
             <tr>
                 <td><?= $i; ?></td>
