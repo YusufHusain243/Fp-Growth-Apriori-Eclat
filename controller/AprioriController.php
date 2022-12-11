@@ -29,7 +29,7 @@ class AprioriController extends AprioriModel
         $end_time = microtime(true);
 
         //lama waktu eksekusi
-        $times = $start_time - $end_time;
+        $times = $end_time - $start_time;
 
         return [
             'products_data' => $products_data,

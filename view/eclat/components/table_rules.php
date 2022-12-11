@@ -1,25 +1,23 @@
-<h1>Rule Association 3 Item</h1>
+<h1 class="text-black">Rules</h1>
 <table class="table table-bordered">
-    <thead>
+    <thead class="text-black">
         <tr>
             <th>No</th>
-            <th>Rule</th>
-            <th>A&B</th>
-            <th>A</th>
+            <th>Antecedent</th>
+            <th>Consequent</th>
             <th>Confidence</th>
             <th>Lift Ratio</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody class="text-black">
         <?php
         $i = 1;
-        foreach ($data['ruleThreeItem'] as $key => $item) {
+        foreach ($data['generateRules'] as $key => $item) {
         ?>
             <tr>
                 <td><?= $i; ?></td>
-                <td>Jika Membeli {<?= $item['antecedent'] ?>}, Maka Membeli {<?= $item['consequent'] ?>}</td>
-                <td><?= $item['ab'] ?></td>
-                <td><?= $item['a'] ?></td>
+                <td><?= $item['antecedent'] ?></td>
+                <td><?= $item['consequent'] ?></td>
                 <td><?= $item['confidence'] ?></td>
                 <td><?= $item['lift_ratio'] ?></td>
             </tr>

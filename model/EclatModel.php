@@ -21,12 +21,14 @@ class EclatModel extends Connection
     public function getTransaction()
     {
         $data = mysqli_query($this->connect(), "SELECT
-                                                    detail_transaksi.id,
+                                                    transaksi.id,
                                                     GROUP_CONCAT(produk.nama separator ', ') AS item
                                                 FROM
                                                     detail_transaksi
-                                                LEFT JOIN 
+                                                INNER JOIN 
                                                     produk ON (detail_transaksi.id_produk = produk.id)
+                                                INNER JOIN 
+                                                    transaksi ON (detail_transaksi.id_transaksi = transaksi.id)
                                                 GROUP BY detail_transaksi.id_transaksi");
         return $this->processData($data);
     }

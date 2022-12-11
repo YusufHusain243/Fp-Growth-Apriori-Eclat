@@ -14,7 +14,7 @@ $page = $_GET['page'];
     <title>Document</title>
 </head>
 
-<body class="bg-dark">
+<body class="bg-light">
     <div class="container">
         <nav class="navbar navbar-expand navbar-dark bg-primary">
             <div class="container-fluid">

@@ -1,13 +1,13 @@
-<h1>Transaksi</h1>
+<h1 class="text-black">Transaksi</h1>
 <table class="table table-bordered">
-    <thead>
+    <thead class="text-black">
         <tr>
             <th>No</th>
             <th>TID</th>
             <th>Produk</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody class="text-black">
         <?php
         $i = 1;
         foreach ($data['transaksi'] as $key => $item) {

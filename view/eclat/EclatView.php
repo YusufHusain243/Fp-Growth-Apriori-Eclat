@@ -1,8 +1,8 @@
-<h1>Eclat Algorithm</h1>
+<h1 class="text-black">Eclat Algorithm</h1>
 <form action="" method="post">
-    <label for="">Min Support</label>
+    <label for="" class="text-black">Min Support</label>
     <input type="text" name="min_support">
-    <label for="">Min Confidence</label>
+    <label for="" class="text-black">Min Confidence</label>
     <input type="text" name="min_confidence">
     <button type="submit" name="submit">Submit</button>
 </form>
@@ -16,11 +16,8 @@ if (isset($_POST['submit'])) {
     $data = $eclatController->index();
     include "components/table_transaction.php";
     include "components/table_vertikalDataFormat.php";
-    include "components/table_itemsetOne.php";
-    include "components/table_itemsetTwo.php";
-    include "components/table_itemsetThree.php";
-    include "components/table_rule_2.php";
-    include "components/table_rule_3.php";
+    include "components/table_itemsets.php";
+    include "components/table_rules.php";
     echo "Lama Eksekusi = " . $data['lama'] . "detik";
 }
 ?>

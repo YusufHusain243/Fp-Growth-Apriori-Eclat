@@ -1,29 +1,25 @@
-<h1>1 - Itemset</h1>
+<h1 class="text-black">Itemsets</h1>
 <table class="table table-bordered">
-    <thead>
+    <thead class="text-black">
         <tr>
             <th>No</th>
             <th>Produk</th>
-            <th>Support</th>
             <th>TID</th>
+            <th>Freq</th>
+            <th>Support</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody class="text-black">
         <?php
         $i = 1;
-        foreach ($data['itemsetOne'] as $key => $item) {
+        foreach ($data['itemsets'] as $key => $item) {
         ?>
             <tr>
                 <td><?= $i; ?></td>
                 <td><?= $item['produk'] ?></td>
+                <td><?= $item['TID'] ?></td>
+                <td><?= $item['freq'] ?></td>
                 <td><?= $item['support'] ?></td>
-                <td>
-                    <?php
-                    foreach ($item['TID'] as $key => $value) {
-                        echo $value . ", ";
-                    }
-                    ?>
-                </td>
             </tr>
         <?php
             $i++;

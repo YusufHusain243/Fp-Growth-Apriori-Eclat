@@ -16,22 +16,17 @@ class EclatController extends EclatModel
         $dataTransaksi = $this->getTransaction();
         $dataProduk = $this->splitItemTransaction($dataTransaksi);
         $vertikalDataFormat = $eclat->vertikalDataFormat($dataProduk, $dataTransaksi);
-        $itemsetOne = $eclat->itemsetOne($vertikalDataFormat, count($dataTransaksi), $minSupport);
-        $itemsetTwo = $eclat->itemsetTwo($itemsetOne, count($dataTransaksi), $minSupport);
-        $itemsetThree = $eclat->itemsetThree($itemsetOne, count($dataTransaksi), $minSupport);
-        $ruleTwoItem = $eclat->ruleTwoItem($itemsetOne, $itemsetTwo, count($dataTransaksi), $minConfidence);
-        $ruleThreeItem = $eclat->ruleThreeItem($itemsetOne, $itemsetTwo, $itemsetThree, count($dataTransaksi), $minConfidence);
+        $itemsets = $eclat->itemsets($vertikalDataFormat, $dataTransaksi, $minSupport);
+        $generateRules = $eclat->generateRule($itemsets, $dataTransaksi, $minConfidence);
+        // print_r(json_encode($generateRules));
         $akhir = microtime(true);
         $lama = $akhir - $awal;
         return [
             'produk' => $dataProduk,
             'transaksi' => $dataTransaksi,
             'vertikalDataFormat' => $vertikalDataFormat,
-            'itemsetOne' => $itemsetOne,
-            'itemsetTwo' => $itemsetTwo,
-            'itemsetThree' => $itemsetThree,
-            'ruleTwoItem' => $ruleTwoItem,
-            'ruleThreeItem' => $ruleThreeItem,
+            'itemsets' => $itemsets,
+            'generateRules' => $generateRules,
             'lama' => $lama,
         ];
     }

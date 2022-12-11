@@ -1,12 +1,12 @@
-<h1 class="text-white">Transaksi</h1>
+<h1 class="text-black">Transaksi</h1>
 <table class="table table-bordered">
-    <thead class="text-white">
+    <thead class="text-black">
         <tr>
             <th>No</th>
             <th>Daftar Transaksi</th>
         </tr>
     </thead>
-    <tbody class="text-white">
+    <tbody class="text-black">
         <?php
         $i = 1;
         foreach ($data['transactions_data'] as $key => $item) {
