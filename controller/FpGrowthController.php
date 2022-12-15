@@ -26,14 +26,6 @@ class FpGrowthController extends FpGrowthModel
         print_r(json_encode($sortItemByPriority));
         // $tree = $fpgrowth->fpTree();
         // print_r(json_encode($tree));
-        // $fpgrowth = new FPGrowth2($transactions, $minSupport, $minConfidence);
-        // $fpgrowth->run();
-
-        // $freqItemSet = $fpgrowth->getFrequentItemSet();
-        // $orderItemSet = $fpgrowth->getOrderedItemSet();
-        // $fpTree = $fpgrowth->getTree();
-        // $patterns = $fpgrowth->getPatterns();
-        // $rules = $fpgrowth->getRules();
 
         // $akhir = microtime(true);
         // $lama = $akhir - $awal;
