@@ -15,42 +15,65 @@ class FpGrowthController extends FpGrowthModel
         $minSupport = $_POST['min_support'];
         $minConfidence = $_POST['min_confidence'];
         $getTransaction = $this->getTransaction();
-        $transactions = $this->formatDataTransactions($getTransaction);
+        $product = $this->splitItemTransaction($getTransaction);
+        // print_r(json_encode($product));
+        $fpgrowth = new FpGrowth2();
+        $freqItemSet = $fpgrowth->freqItemSet($product, $getTransaction);
+        // print_r(json_encode($freqItemSet));
+        $sortByPriority = $fpgrowth->sortByPriority($freqItemSet);
+        // print_r(json_encode($sortByPriority));
+        $sortItemByPriority = $fpgrowth->sortItemByPriority($getTransaction, $sortByPriority);
+        print_r(json_encode($sortItemByPriority));
+        // $tree = $fpgrowth->fpTree();
+        // print_r(json_encode($tree));
+        // $fpgrowth = new FPGrowth2($transactions, $minSupport, $minConfidence);
+        // $fpgrowth->run();
 
-        $fpgrowth = new FPGrowth($transactions, $minSupport, $minConfidence);
-        $fpgrowth->run();
+        // $freqItemSet = $fpgrowth->getFrequentItemSet();
+        // $orderItemSet = $fpgrowth->getOrderedItemSet();
+        // $fpTree = $fpgrowth->getTree();
+        // $patterns = $fpgrowth->getPatterns();
+        // $rules = $fpgrowth->getRules();
 
-        $freqItemSet = $fpgrowth->getFrequentItemSet();
-        $orderItemSet = $fpgrowth->getOrderedItemSet();
-        $fpTree = $fpgrowth->getTree();
-        $patterns = $fpgrowth->getPatterns();
-        $rules = $fpgrowth->getRules();
+        // $akhir = microtime(true);
+        // $lama = $akhir - $awal;
 
-        $akhir = microtime(true);
-        $lama = $akhir - $awal;
-
-        return [
-            'transaksi' => $getTransaction,
-            'freqItemSet' => $freqItemSet,
-            'orderItemSet' => $orderItemSet,
-            'fpTree' => $fpTree,
-            'patterns' => $patterns,
-            'rules' => $rules,
-            'lama' => $lama,
-        ];
+        // return [
+        //     'transaksi' => $getTransaction,
+        //     'freqItemSet' => $freqItemSet,
+        //     'orderItemSet' => $orderItemSet,
+        //     'fpTree' => $fpTree,
+        //     'patterns' => $patterns,
+        //     'rules' => $rules,
+        //     'lama' => $lama,
+        // ];
     }
 
-    private function formatDataTransactions($getTransactions)
+    // private function formatDataTransactions($getTransactions)
+    // {
+    //     $transactions = [];
+    //     foreach ($getTransactions as $value) {
+    //         $temp = [];
+    //         $item = explode(', ', $value['item']);
+    //         foreach ($item as $value2) {
+    //             $temp[] = $value2;
+    //         }
+    //         $transactions[] = $temp;
+    //     }
+    //     return $transactions;
+    // }
+
+    private function splitItemTransaction($data)
     {
-        $transactions = [];
-        foreach ($getTransactions as $value) {
-            $temp = [];
+        $dataProduk = [];
+        foreach ($data as $value) {
             $item = explode(', ', $value['item']);
-            foreach ($item as $value2) {
-                $temp[] = $value2;
+            for ($i = 0; $i < count($item); $i++) {
+                if (!in_array($item[$i], $dataProduk)) {
+                    $dataProduk[] = $item[$i];
+                }
             }
-            $transactions[] = $temp;
         }
-        return $transactions;
+        return $dataProduk;
     }
 }

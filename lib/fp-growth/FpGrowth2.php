@@ -52,147 +52,45 @@ class FpGrowth2
         return $sortItemByPriority;
     }
 
-    // public function fpTree($sortItemByPriority)
-    // {
-    //     $fpTree = [];
-    //     foreach ($sortItemByPriority as $value) {
-    //         foreach ($value as $value2) {
-    //             $fpTree = $this->insertTree($value2);
-    //         }
-    //     }
-
-    //     print_r(json_encode($fpTree));
-    // }
-
-    private function insertTree($tree)
-    {
-        $arr_tree = [];
-        array_push($arr_tree, $tree);
-        return $arr_tree;
-    }
-
     // public function fpTree()
     // {
-    //     //if order by parentid, id
-    //     $arr = array(
-    //         // array('id' => 100, 'parentid' => 0, 'name' => 'a'),
-    //         // array('id' => 101, 'parentid' => 100, 'name' => 'b'),
-    //         // array('id' => 102, 'parentid' => 101, 'name' => 'c'),
-    //         // array('id' => 103, 'parentid' => 101, 'name' => 'd'),
-    //         array('product'=> 'null', 'parent'=> 0, 'child'=> 'Roti'),
-    //         array('product'=> 'Roti', 'parent'=> 'null', 'child'=> 'Mentega'),
-    //         array('product'=> 'Mentega', 'parent'=> 'Roti', 'child'=> 'Pena'),
-    //         array('product'=> 'Pena', 'parent'=> 'Mentega', 'child'=> ''),
-    //         array('product'=> 'Roti', 'parent'=> 'null', 'child'=> 'Mentega'),
-    //         array('product'=> 'Mentega', 'parent'=> 'Roti', 'child'=> 'Telur'),
-    //         array('product'=> 'Telur', 'parent'=> 'Mentega', 'child'=> ''),
-    //         array('product'=> 'Telur', 'parent'=> 'null', 'child'=> 'Susu'),
-    //         array('product'=> 'Susu', 'parent'=> 'Telur', 'child'=> 'Buncis'),
-    //         array('product'=> 'Buncis', 'parent'=> 'Susu', 'child'=> ''),
-    //         array('product'=> 'Roti', 'parent'=> 'null', 'child'=> 'Mentega'),
-    //         array('product'=> 'Mentega', 'parent'=> 'Roti', 'child'=> ''),
-    //         array('product'=> 'Roti', 'parent'=> 'null', 'child'=> 'Mentega'),
-    //         array('product'=> 'Mentega', 'parent'=> 'Roti', 'child'=> 'Telur'),
-    //         array('product'=> 'Telur', 'parent'=> 'Mentega', 'child'=> 'Susu'),
-    //         array('product'=> 'Susu', 'parent'=> 'Telur', 'child'=> 'Kecap'),
-    //         array('product'=> 'Kecap', 'parent'=> 'Susu', 'child'=> '')
-    //     );
+    //     $array = [
+    //         ['a', 'b', 'c'],
+    //         ['b', 'c', 'd', 'e'],
+    //         ['a', 'c', 'd'],
+    //         ['c', 'd'],
+    //     ];
 
-    //     $arr_tree = array();
-    //     $arr_tmp = array();
+    //     $tree = null;
 
-    //     foreach ($arr as $item) {
-    //         $parentid = $item['parent'];
-    //         $id = $item['product'];
-
-    //         if ($parentid  == 0) {
-    //             $arr_tree[$id] = $item;
-    //             $arr_tmp[$id] = &$arr_tree[$id];
+    //     for ($i = 0; $i < count($array); $i++) {
+    //         $id = uniqid();
+    //         if ($tree == null) {
+    //             $t['id'] = $id;
+    //             $t['parent'] = null;
+    //             $t['item'] = null;
+    //             $tree[] = $t;
+    //             for ($j = 0; $j < count($array[0]); $j++) {
+    //                 $id = uniqid();
+    //                 $t['id'] = $id;
+    //                 $t['parent'] = $tree[$j]['id'];
+    //                 $t['item'] = $array[0][$j];
+    //                 $tree[] = $t;
+    //             }
     //         } else {
-    //             if (!empty($arr_tmp[$parentid])) {
-    //                 $arr_tmp[$parentid]['c'][$id] = $item;
-    //                 $arr_tmp[$id] = &$arr_tmp[$parentid]['c'][$id];
+    //             $k = 1;
+    //             $check = false;
+    //             while ($check == false) {
+    //                 print_r(json_encode($k));
+    //                 print_r(json_encode($tree[$k]));
+    //                 echo "<br>";
+    //                 $k++;
+    //                 $check = !isset($tree[$k]);
     //             }
     //         }
+    //         echo "<br>";
     //     }
 
-    //     unset($arr_tmp);
-    //     echo '<pre>';
-    //     print_r($arr_tree);
-    //     echo "</pre>";
+    //     return $tree;
     // }
-
-    function buildTree(array $flatList)
-    {
-        $grouped = [];
-        foreach ($flatList as $node) {
-            $grouped[$node['parent']][] = $node;
-        }
-
-        $fnBuilder = function ($siblings) use (&$fnBuilder, $grouped) {
-            foreach ($siblings as $k => $sibling) {
-                $id = $sibling['id'];
-                if (isset($grouped[$id])) {
-                    $sibling['children'] = $fnBuilder($grouped[$id]);
-                }
-                $siblings[$k] = $sibling;
-            }
-            return $siblings;
-        };
-
-        return $fnBuilder($grouped[0]);
-    }
-
-    function tree()
-    {
-        $arr = array(
-            array('id' => 0, 'parent' => 0, 'product' => 'null', 'child' => 'Roti'),
-            array('id' => 1, 'parent' => 0, 'product' => 'Roti', 'child' => 'Mentega'),
-            array('id' => 2, 'parent' => 1, 'product' => 'Mentega', 'child' => 'Pena'),
-            array('id' => 3, 'parent' => 2, 'product' => 'Pena', 'child' => ''),
-            //array('id' => 1, 'parent' => 0, 'product' => 'Roti', 'child' => 'Mentega'),
-            array('id' => 2, 'parent' => 1, 'product' => 'Mentega', 'child' => 'Telur'),
-            array('id' => 6, 'parent' => 2, 'product' => 'Telur', 'child' => ''),
-            array('id' => 6, 'parent' => 0, 'product' => 'Telur', 'child' => 'Susu'),
-            array('id' => 8, 'parent' => 6, 'product' => 'Susu', 'child' => 'Buncis'),
-            array('id' => 9, 'parent' => 8, 'product' => 'Buncis', 'child' => ''),
-            //array('id' => 1, 'parent' => 0, 'product' => 'Roti', 'child' => 'Mentega'),
-            // array('id' => 2, 'parent' => 1, 'product' => 'Mentega', 'child' => ''),
-            //array('id' => 1, 'parent' => 0, 'product' => 'Roti', 'child' => 'Mentega'),
-            //array('id' => 2, 'parent' => 1, 'product' => 'Mentega', 'child' => 'Telur'),
-            array('id' => 6, 'parent' => 2, 'product' => 'Telur', 'child' => 'Susu'),
-            array('id' => 8, 'parent' => 6, 'product' => 'Susu', 'child' => 'Kecap'),
-            array('id' => 16, 'parent' => 8, 'product' => 'Kecap', 'child' => '')
-        );
-
-        // $arr = array(
-        //     array('id' => 100, 'parentid' => 0, 'name' => 'a'),
-        //     array('id' => 101, 'parentid' => 100, 'name' => 'a'),
-        //     array('id' => 102, 'parentid' => 101, 'name' => 'a'),
-        //     array('id' => 103, 'parentid' => 101, 'name' => 'a'),
-        // );
-
-        $arr_tree = array();
-        $arr_tmp = array();
-
-        foreach ($arr as $item) {
-            $parentid = $item['parent'];
-            $id = $item['id'];
-
-            if ($parentid  == 0) {
-                $arr_tree[$id] = $item;
-                $arr_tmp[$id] = &$arr_tree[$id];
-            } else {
-                if (!empty($arr_tmp[$parentid])) {
-                    $arr_tmp[$parentid]['children'][$id] = $item;
-                    $arr_tmp[$id] = &$arr_tmp[$parentid]['children'][$id];
-                }
-            }
-        }
-
-        unset($arr_tmp);
-        echo '<pre>';
-        print_r($arr_tree);
-        echo "</pre>";
-    }
 }
